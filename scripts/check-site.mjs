@@ -68,6 +68,15 @@ check('legacy /1/ link shows its target', async () => {
     expect(html.includes('things:///add?title=Buy%20milk%20%26%20eggs'), 'target URL missing from the page')
 })
 
+// Shared-link addresses never leave as a referrer, even when the link 404s
+for (const path of [SHARED_PATH, LEGACY_PATH, '/1/example:/not/a/page']) {
+    check(`referrer policy ${path.slice(0, 40)}`, async () => {
+        const res = await get(BASE + path)
+        const policy = res.headers.get('referrer-policy')
+        expect(policy === 'origin', `Referrer-Policy is ${policy}`)
+    })
+}
+
 // Old domains forward with the exact path and query
 if (!SKIP_HOSTS) {
     for (const host of OLD_HOSTS) {
