@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isSharedLinkPath, redactSharedLinkUrl } from './analytics'
+import { isSharedLinkPath, redactSharedLinkUrl, sharedLinkPageview } from './analytics'
 
 describe('isSharedLinkPath', () => {
     it('matches shared-link pages only', () => {
@@ -26,5 +26,24 @@ describe('redactSharedLinkUrl', () => {
 
     it('leaves other pages alone', () => {
         expect(redactSharedLinkUrl('https://linkopen.app/tools?ref=hn', 'x')).toBe('https://linkopen.app/tools?ref=hn')
+    })
+})
+
+describe('sharedLinkPageview', () => {
+    it('gives shared-link pages a fixed route and path', () => {
+        expect(sharedLinkPageview('/s/1kAHFkJ4KQEw')).toEqual({ route: '/s/[data]', path: '/s/[data]' })
+        expect(sharedLinkPageview('/0/slack%3A%2F%2Fopen')).toEqual({ route: '/[type]/[url]', path: '/0/[url]' })
+        expect(sharedLinkPageview('/1/altstore:/install')).toEqual({ route: '/[type]/[url]', path: '/1/[url]' })
+    })
+
+    it('leaves other pages alone', () => {
+        expect(sharedLinkPageview('/')).toBe(null)
+        expect(sharedLinkPageview('/tools/deep-link-builder')).toBe(null)
+        expect(sharedLinkPageview(undefined)).toBe(null)
+    })
+
+    it('keeps the path redactable to the app the link opens', () => {
+        const { path } = sharedLinkPageview('/1/spotify:track:0000000000000000000000')
+        expect(redactSharedLinkUrl(`https://linkopen.app${path}`, 'spotify')).toBe('https://linkopen.app/1/spotify')
     })
 })
