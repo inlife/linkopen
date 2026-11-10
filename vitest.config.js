@@ -7,4 +7,8 @@ export default defineConfig({
             utils: path.resolve(__dirname, 'utils/'),
         },
     },
+    test: {
+        // utils/analytics.test.js mocks next/navigation inside this package
+        server: { deps: { inline: ['@vercel/analytics'] } },
+    },
 })

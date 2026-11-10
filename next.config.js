@@ -46,6 +46,15 @@ const nextConfig = {
                     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
                 ],
             },
+            {
+                // Shared-link addresses never leave as a referrer, not even to our own
+                // analytics beacon. Their layouts say the same in a meta tag, but a link
+                // that 404s doesn't get one. Comes after /(.*): the last match wins.
+                source: '/:prefix(s|0|1)/:rest*',
+                headers: [
+                    { key: 'Referrer-Policy', value: 'origin' },
+                ],
+            },
         ]
     },
 }
