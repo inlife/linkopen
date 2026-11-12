@@ -60,6 +60,11 @@ describe('makeLink', () => {
         expect(() => makeLink(null)).toThrow(/empty/)
     })
 
+    it('refuses links without a scheme', () => {
+        expect(() => makeLink('spotify')).toThrow(/scheme/)
+        expect(() => makeLink('my_app://x')).toThrow(/scheme/)
+    })
+
     it('round-trips through decode()', () => {
         const urls = [
             OBSIDIAN,

@@ -5,7 +5,7 @@ import Footer from 'components/footer'
 import GeoBg from 'components/geo-bg'
 import {useEffect, useState} from 'react'
 import {shouldCompress} from 'utils/codec'
-import {isWebUrl} from 'utils/link-policy'
+import {isOpenableUrl, isWebUrl} from 'utils/link-policy'
 
 export default function HomePage() {
     const [url, setUrl] = useState("")
@@ -29,6 +29,12 @@ export default function HomePage() {
     const canCompress = url.length > 0 && shouldCompress(url, linkType).useCompression
 
     const generateUrl = () => {
+        // A link without a scheme can't open anything (see utils/link-policy)
+        if (!isOpenableUrl(url)) {
+            setButtonText("START WITH AN APP, LIKE SLACK://")
+            setTimeout(() => setButtonText("COPY LINK"), 2500)
+            return
+        }
         const origin = location.origin + '/'
         let link
         if (compress && canCompress) {
