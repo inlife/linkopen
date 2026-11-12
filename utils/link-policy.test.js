@@ -13,6 +13,12 @@ describe('schemeOf', () => {
         expect(schemeOf('not a url')).toBe('')
         expect(schemeOf('://missing')).toBe('')
     })
+
+    it('reads the scheme the way browsers do', () => {
+        expect(schemeOf('\x01javascript:alert(1)')).toBe('javascript')
+        expect(schemeOf('java\tscript:alert(1)')).toBe('javascript')
+        expect(schemeOf(' spotify:abc')).toBe('')
+    })
 })
 
 describe('isWebUrl', () => {
@@ -33,6 +39,8 @@ describe('isBlockedUrl', () => {
         expect(isBlockedUrl(' JavaScript:alert(1)')).toBe(true)
         expect(isBlockedUrl('data:text/html,<b>hi</b>')).toBe(true)
         expect(isBlockedUrl('vbscript:msgbox')).toBe(true)
+        expect(isBlockedUrl('\x01javascript:alert(1)')).toBe(true)
+        expect(isBlockedUrl('java\nscript:alert(1)')).toBe(true)
     })
 
     it('allows app and web schemes', () => {
@@ -53,6 +61,7 @@ describe('isOpenableUrl', () => {
         expect(isOpenableUrl('www.example.com')).toBe(false)
         expect(isOpenableUrl('//example.com')).toBe(false)
         expect(isOpenableUrl('/about')).toBe(false)
+        expect(isOpenableUrl(' spotify:abc')).toBe(false)
         expect(isOpenableUrl('')).toBe(false)
     })
 

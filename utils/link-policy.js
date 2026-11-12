@@ -6,9 +6,13 @@
 
 const BLOCKED_SCHEMES = ['javascript', 'data', 'vbscript']
 
+// Read the scheme the way browsers do: they ignore control characters and spaces
+// at either end and drop tabs and newlines anywhere. trim() differs both ways,
+// which let "\x01javascript:" past the block list.
 export function schemeOf(url) {
     if (!url) return ''
-    const match = url.trim().match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/)
+    const cleaned = url.replace(/^[\u0000- ]+|[\u0000- ]+$/g, '').replace(/[\t\n\r]/g, '')
+    const match = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/)
     return match ? match[1].toLowerCase() : ''
 }
 
