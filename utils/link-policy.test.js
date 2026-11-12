@@ -17,7 +17,7 @@ describe('schemeOf', () => {
     it('reads the scheme the way browsers do', () => {
         expect(schemeOf('\x01javascript:alert(1)')).toBe('javascript')
         expect(schemeOf('java\tscript:alert(1)')).toBe('javascript')
-        expect(schemeOf(' spotify:abc')).toBe('')
+        expect(schemeOf('\xa0spotify:abc')).toBe('')
     })
 })
 
@@ -61,7 +61,7 @@ describe('isOpenableUrl', () => {
         expect(isOpenableUrl('www.example.com')).toBe(false)
         expect(isOpenableUrl('//example.com')).toBe(false)
         expect(isOpenableUrl('/about')).toBe(false)
-        expect(isOpenableUrl(' spotify:abc')).toBe(false)
+        expect(isOpenableUrl('\xa0spotify:abc')).toBe(false)
         expect(isOpenableUrl('')).toBe(false)
     })
 

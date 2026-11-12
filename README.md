@@ -26,7 +26,7 @@ https://linkopen.app/s/1kAHHUPYE4NaPAHCyBTBAXAlgOwOYFIBMAGdMZBAZyA
 - The link carries the URL. Common pieces such as `obsidian://open?vault=` or `https://github.com/` are swapped for single characters from a small dictionary, then the result is compressed with [LZ-string](https://github.com/pieroxy/lz-string) into URL-safe text. See [`utils/codec.js`](utils/codec.js).
 - There is no database. Nothing is saved when you make a link, and links don't expire.
 - Opening a link loads a page on linkopen.app that decodes the URL and hands it to the app. Auto links (`/s/1…`) open the app right away. Manual links (`/s/0…`) show an Open link button first.
-- Links to websites (http and https) always get the confirmation page, never an automatic redirect. `javascript:`, `data:` and `vbscript:` links are refused. See [`utils/link-policy.js`](utils/link-policy.js).
+- Links to websites (http and https) always get the confirmation page, never an automatic redirect. `javascript:`, `data:` and `vbscript:` links are refused, and so are links without a scheme, which a browser would read as a page on linkopen.app. See [`utils/link-policy.js`](utils/link-policy.js).
 - When compression wouldn't make a link shorter, the converter uses the plain form `https://linkopen.app/1/<url-encoded link>` instead.
 
 ![The converter on linkopen.app with an obsidian:// link filled in](docs/media/converter.png)

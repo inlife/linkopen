@@ -102,7 +102,7 @@ export default function BuilderClient() {
         try {
             return makeLink(rawUrl)
         } catch {
-            // Refused by the link policy (javascript: and friends)
+            // Refused by the link policy (no valid scheme, or javascript: and friends)
             return ''
         }
     }, [rawUrl])

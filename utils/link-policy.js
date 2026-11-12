@@ -11,7 +11,7 @@ const BLOCKED_SCHEMES = ['javascript', 'data', 'vbscript']
 // which let "\x01javascript:" past the block list.
 export function schemeOf(url) {
     if (!url) return ''
-    const cleaned = url.replace(/^[\u0000- ]+|[\u0000- ]+$/g, '').replace(/[\t\n\r]/g, '')
+    const cleaned = url.replace(/^[\x00-\x20]+|[\x00-\x20]+$/g, '').replace(/[\t\n\r]/g, '')
     const match = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/)
     return match ? match[1].toLowerCase() : ''
 }
