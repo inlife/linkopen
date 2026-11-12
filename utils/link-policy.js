@@ -20,3 +20,10 @@ export function isWebUrl(url) {
 export function isBlockedUrl(url) {
     return BLOCKED_SCHEMES.includes(schemeOf(url))
 }
+
+// A shared link has to name an app or a website. Without a scheme the browser
+// reads the target as a path on linkopen.app: /1/spotify reloads itself forever,
+// and /1/%2F%2Fexample.com would forward straight to a website.
+export function isOpenableUrl(url) {
+    return schemeOf(url) !== '' && !isBlockedUrl(url)
+}

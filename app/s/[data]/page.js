@@ -1,6 +1,6 @@
 import RedirectView from 'components/redirect-view'
 import { decode } from 'utils/codec'
-import { isBlockedUrl } from 'utils/link-policy'
+import { isOpenableUrl } from 'utils/link-policy'
 
 export default async function CompressedProxyPage({ params }) {
     const { data } = await params
@@ -12,6 +12,6 @@ export default async function CompressedProxyPage({ params }) {
         // falls through to the invalid view
     }
 
-    if (!target || isBlockedUrl(target.url)) return <RedirectView invalid />
+    if (!target || !isOpenableUrl(target.url)) return <RedirectView invalid />
     return <RedirectView url={target.url} type={target.type} />
 }

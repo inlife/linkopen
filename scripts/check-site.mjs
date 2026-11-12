@@ -68,6 +68,15 @@ check('legacy /1/ link shows its target', async () => {
     expect(html.includes('things:///add?title=Buy%20milk%20%26%20eggs'), 'target URL missing from the page')
 })
 
+// Without a scheme the browser reads the target as a path on this site
+for (const path of ['/1/spotify', '/1/' + encodeURIComponent('//example.com')]) {
+    check(`link without a scheme is refused: ${path}`, async () => {
+        const html = await (await get(BASE + path)).text()
+        expect(html.includes('This link can’t be opened'), 'invalid-link page missing')
+        expect(!html.includes('Opening link…'), 'page still opens the link')
+    })
+}
+
 // Old domains forward with the exact path and query
 if (!SKIP_HOSTS) {
     for (const host of OLD_HOSTS) {
